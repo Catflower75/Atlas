@@ -19,10 +19,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-          token: ${{ secrets.RUNNER_SECRET }}
+          # Updated the token to use a secret specific to your fork
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Validate YAML files
-        run: 'yamllint -d "{extends: relaxed, rules: {empty-lines: disable, line-length: disable, new-line-at-end-of-file: disable, trailing-spaces: disable, new-lines: {type: platform}}}" .'
+        run: |
+          yamllint -d "{extends: relaxed, rules: {empty-lines: disable, line-length: disable, new-line-at-end-of-file: disable, trailing-spaces: disable, new-lines: {type: platform}}}" .
 
       - name: Get changed files
         id: changed-files
@@ -71,7 +73,7 @@ jobs:
 
           Write-Output "Making certificate..."
           $thumbprint = .\make-cert.ps1
-          
+
           $atlasSrcPath = '..\Atlas\src\'
           $packagePath = "$atlasSrcPath\playbook\Executables\AtlasModules\Packages"
           mkdir $packagePath -EA 0 | Out-Null
